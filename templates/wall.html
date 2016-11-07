@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Wall</title>
+        <style>
+            .comment {
+                margin-left: 20px;
+            }
+
+            .top {
+                font-weight: bold;
+            }
+
+            .name {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Welcome, {{first_name}}!</h1>
+        <hr>
+        <h3>Messages</h3>
+        <hr>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="name">{{message['first_name']}} {{message['last_name']}}</p>
+                <p>{{message['created_at']}}:</p>
+                <p>{{message['message']}}</p>
+                {% if comments %}
+                    {% for comment in comments %}
+                        {% if comment['messages_id'] == message['id']%}
+                            <p class="comment top">{{commenter}} {{comment['created_at']}}</p>
+                            <p class="comment">{{comment['comment']}}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <form action="/comment" method="post">
+                    <input type="hidden" name="message_id" value="{{message['id']}}">
+                    <input type="hidden" name="user_id" value="{{message['user_id']}}">
+                    <textarea name="comment" rows="5" cols="40"></textarea>
+                    <input type="submit" name="submit" value="Submit Comment">
+                </form>
+                <hr>
+            {% endfor %}
+        {% endif %}
+        <h3>Write a message!</h3>
+        <form action="/submit_message" method="post">
+            <textarea name="message" rows="8" cols="40"></textarea>
+            <input type="submit" name="submit" value="Submit Message">
+        </form>
+    </body>
+</html>
